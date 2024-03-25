@@ -1,0 +1,27 @@
+{
+  "name": "boostify",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/boostify.umd.js",
+  "module": "./dist/boostify.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/boostify.es.js",
+      "require": "./dist/boostify.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.5",
+    "sass": "^1.69.3",
+    "terser": "^5.28.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  },
+  "license": "MIT"
+}
