@@ -6,3 +6,10 @@
 ### Helper functions to inject Javascript files, Css and HTML content.
 
 You can find more informaton about [here](https://boostifyjs.com/) 
+
+
+### ChangeLog
+
+[0.0.12] - 4/4/2024
+Changed:
+Change package.json to prevent issues with Netlify builds
