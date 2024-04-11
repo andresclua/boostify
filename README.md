@@ -10,6 +10,11 @@ You can find more informaton about [here](https://boostifyjs.com/)
 
 ### ChangeLog
 
+[0.0.13] - 11/4/2024
+Changed:
+[Issue](https://github.com/andresclua/boostify/issues/2) fixed
+
+
 [0.0.12] - 4/4/2024
 Changed:
 Change package.json to prevent issues with Netlify builds

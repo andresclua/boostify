@@ -329,7 +329,10 @@ class B {
     this.events.push(t);
   }
   destroyclick(e) {
-    const t = e.element || document.querySelector(".js--click-boostify"), s = this.events.findIndex((o) => o.instance.DOM.element === t && o.type === "click");
+    const t = e.element || document.querySelector(".js--click-boostify"), s = this.events.findIndex((o) => {
+      var n, i;
+      return ((i = (n = o.instance) == null ? void 0 : n.DOM) == null ? void 0 : i.element) === t && o.type === "click";
+    });
     s !== -1 ? (this.events[s].instance.destroy(), this.events.splice(s, 1)) : console.log("Click event not found for element:", t);
   }
   /**
