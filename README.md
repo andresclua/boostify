@@ -1,20 +1,30 @@
 # Boostify JS
 
-## A cutting-edge JavaScript library designed to optimize your website's interactivity and performance seamlessly.
+**Boostify** is a lightweight, high-performance JavaScript library built to enhance website loading and overall performance. It offers tools to manage events smartly, load resources efficiently, and improve user experience—without compromising speed.
 
-### Fire events when is most needed to improve performance. 
-### Helper functions to inject Javascript files, Css and HTML content.
+## Features
 
-You can find more informaton about [here](https://boostifyjs.com/) 
+- 🔥 **Smart Event Triggers**  
+  Fire events only when needed to optimize performance and reduce overhead.
 
+- ⚙️ **Helper Functions**  
+  Easily inject JavaScript files, CSS, and HTML content on demand.
 
-### ChangeLog
+For more information, visit [boostifyjs.com](https://boostifyjs.com/)
 
-[0.0.13] - 11/4/2024
-Changed:
-[Issue](https://github.com/andresclua/boostify/issues/2) fixed
+---
 
+## Changelog
 
-[0.0.12] - 4/4/2024
-Changed:
-Change package.json to prevent issues with Netlify builds
+### [0.0.13] - 2025-06-18
+**Changed**
+- Refactored event handling
+- Added user inactivity detection feature
+
+### [0.0.13] - 2024-04-11
+**Changed**
+- [Issue #2](https://github.com/andresclua/boostify/issues/2) fixed
+
+### [0.0.12] - 2024-04-04
+**Changed**
+- Updated `package.json` to resolve Netlify build issues
