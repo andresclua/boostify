@@ -16,7 +16,7 @@ For more information, visit [boostifyjs.com](https://boostifyjs.com/)
 
 ## Changelog
 
-### [0.0.13] - 2025-06-18
+### [0.0.14] - 2025-06-18
 **Changed**
 - Refactored event handling
 - Added user inactivity detection feature
