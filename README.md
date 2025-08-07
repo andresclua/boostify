@@ -16,6 +16,10 @@ For more information, visit [boostifyjs.com](https://boostifyjs.com/)
 
 ## Changelog
 
+### [0.0.15] - 2025-08-07
+**Changed**
+- Fix autoplay true/false in videoplayer
+
 ### [0.0.14] - 2025-06-18
 **Changed**
 - Refactored event handling

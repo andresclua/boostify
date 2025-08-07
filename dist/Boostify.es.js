@@ -203,7 +203,7 @@ class S extends f {
       }
       const i = Array.from(s);
       let r = 0;
-      const o = (c) => {
+      const n = (c) => {
         if (c.src) {
           const h = document.createElement("script");
           h.src = c.src, h.onload = () => {
@@ -218,9 +218,9 @@ class S extends f {
           } catch (h) {
             t(h);
           }
-      }, n = i.filter((c) => c.src), d = i.filter((c) => !c.src);
-      n.forEach(o), n.length === 0 ? d.forEach(o) : this.externalScriptsCheckIntervalId = setInterval(() => {
-        r >= n.length && (clearInterval(this.externalScriptsCheckIntervalId), d.forEach(o));
+      }, o = i.filter((c) => c.src), d = i.filter((c) => !c.src);
+      o.forEach(n), o.length === 0 ? d.forEach(n) : this.externalScriptsCheckIntervalId = setInterval(() => {
+        r >= o.length && (clearInterval(this.externalScriptsCheckIntervalId), d.forEach(n));
       }, 100);
     });
   }
@@ -349,10 +349,10 @@ function L(a, e) {
     r.append("product_id", a), r.append("license_key", e), fetch(t, {
       method: "POST",
       body: r
-    }).then((o) => o.json()).then((o) => {
-      s(o);
-    }).catch((o) => {
-      i(o);
+    }).then((n) => n.json()).then((n) => {
+      s(n);
+    }).catch((n) => {
+      i(n);
     });
   });
 }
@@ -488,8 +488,8 @@ class B {
       element: t,
       options: i,
       callback: e.callback || null
-    }), o = t instanceof NodeList ? [...t] : [t];
-    return this.registerEvent("observer", r, { elements: o }), r;
+    }), n = t instanceof NodeList ? [...t] : [t];
+    return this.registerEvent("observer", r, { elements: n }), r;
   }
   /**
    * Refresh observer events
@@ -521,7 +521,7 @@ class B {
     let s = !1;
     return t.forEach((i) => {
       const r = this.events.findIndex(
-        (o) => o.type === "observer" && Array.isArray(o.elements) && o.elements.includes(i)
+        (n) => n.type === "observer" && Array.isArray(n.elements) && n.elements.includes(i)
       );
       r !== -1 ? (this.events[r].instance.destroy({ element: i }), this.events[r].instance.observers.length === 0 && this.events.splice(r, 1), s = !0) : this.debug && console.warn("Observer event not found for element:", i);
     }), s;
@@ -562,11 +562,11 @@ class B {
         if (i.type === "inactivity")
           try {
             i.instance.destroy(), this.events.splice(r, 1), s = !0;
-          } catch (o) {
+          } catch (n) {
             l.handleError(
               "Boostify.destroyinactivity",
               "Error destroying inactivity event",
-              o,
+              n,
               this.debug
             );
           }
@@ -623,26 +623,26 @@ class B {
    */
   videoPlayer(e) {
     try {
-      const { url: { ogg: t, mp4: s }, attributes: i, appendTo: r, style: o } = e, n = document.createElement("video");
-      n.style.width = "100%", n.style.height = o && o.height ? o.height : "auto", o && Object.keys(o).forEach((c) => {
-        n.style[c] = o[c];
+      const { url: { ogg: t, mp4: s }, attributes: i, appendTo: r, style: n } = e, o = document.createElement("video");
+      o.style.width = "100%", o.style.height = n && n.height ? n.height : "auto", n && Object.keys(n).forEach((c) => {
+        o.style[c] = n[c];
       });
       for (let c in i)
-        c === "class" ? n.className = i[c] : c === "muted" ? n.muted = i[c] : n.setAttribute(c, i[c]);
+        c === "class" ? o.className = i[c] : c === "muted" ? o.muted = i[c] : c === "autoplay" ? o.autoplay = i[c] : c === "controls" ? o.controls = i[c] : o.setAttribute(c, i[c]);
       if (t) {
         const c = document.createElement("source");
-        c.setAttribute("src", t), c.setAttribute("type", "video/ogg"), n.appendChild(c);
+        c.setAttribute("src", t), c.setAttribute("type", "video/ogg"), o.appendChild(c);
       }
       if (s) {
         const c = document.createElement("source");
-        c.setAttribute("src", s), c.setAttribute("type", "video/mp4"), n.appendChild(c);
+        c.setAttribute("src", s), c.setAttribute("type", "video/mp4"), o.appendChild(c);
       }
       let d;
       return typeof r == "string" ? d = document.getElementById(r) || document.querySelector(r) : r instanceof Element && (d = r), l.assertCondition(
         d,
         "Boostify.videoPlayer",
         "Append target not found"
-      ), d.appendChild(n), n;
+      ), d.appendChild(o), o;
     } catch (t) {
       l.handleError(
         "Boostify.videoPlayer",
@@ -696,14 +696,14 @@ class B {
       r.setAttribute("frameborder", "0"), r.setAttribute("allowfullscreen", ""), r.style.width = "100%", r.style.height = i && i.height ? i.height : "100%", i && Object.keys(i).forEach((d) => {
         r.style[d] = i[d];
       });
-      let o = e;
-      t && (o += `${e.includes("?") ? "&" : "?"}autoplay=1`, e.includes("youtube.com") || e.includes("youtu.be") ? o += "&mute=1" : e.includes("vimeo.com") && (o += "&muted=1")), r.src = o;
-      let n;
-      return typeof s == "string" ? n = document.getElementById(s) || document.querySelector(s) : s instanceof Element && (n = s), l.assertCondition(
-        n,
+      let n = e;
+      t && (n += `${e.includes("?") ? "&" : "?"}autoplay=1`, e.includes("youtube.com") || e.includes("youtu.be") ? n += "&mute=1" : e.includes("vimeo.com") && (n += "&muted=1")), r.src = n;
+      let o;
+      return typeof s == "string" ? o = document.getElementById(s) || document.querySelector(s) : s instanceof Element && (o = s), l.assertCondition(
+        o,
         "Boostify.videoEmbed",
         "Append target not found"
-      ), n.innerHTML = "", n.appendChild(r), r;
+      ), o.innerHTML = "", o.appendChild(r), r;
     } catch (r) {
       l.handleError(
         "Boostify.videoEmbed",
@@ -719,32 +719,32 @@ class B {
    * @returns {Promise} - Promise that resolves when the script is loaded
    */
   async loadScript({ url: e = "", attributes: t = [], appendTo: s = "head", inlineScript: i = "" }) {
-    return new Promise((r, o) => {
+    return new Promise((r, n) => {
       try {
         l.assertCondition(
           e || i,
           "Boostify.loadScript",
           'Either "url" or "inlineScript" must be provided'
         );
-        const n = w({ url: e, inlineScript: i, attributes: t });
-        n.onload = () => {
+        const o = w({ url: e, inlineScript: i, attributes: t });
+        o.onload = () => {
           this.debug && console.log(`${e} script loaded successfully`), r();
-        }, n.onerror = () => {
+        }, o.onerror = () => {
           const d = new Error(`Script load error for ${e}`);
           l.handleError(
             "Boostify.loadScript",
             "Error loading script",
             d,
             this.debug
-          ), o(d);
-        }, v(n, s), i && !e && r();
-      } catch (n) {
+          ), n(d);
+        }, v(o, s), i && !e && r();
+      } catch (o) {
         l.handleError(
           "Boostify.loadScript",
           "Error creating script element",
-          n,
+          o,
           this.debug
-        ), o(n);
+        ), n(o);
       }
     });
   }
@@ -754,32 +754,32 @@ class B {
    * @returns {Promise} - Promise that resolves when the stylesheet is loaded
    */
   async loadStyle({ url: e = "", attributes: t = [], appendTo: s = "head", inlineStyle: i = "" }) {
-    return new Promise((r, o) => {
+    return new Promise((r, n) => {
       try {
         l.assertCondition(
           e || i,
           "Boostify.loadStyle",
           'Either "url" or "inlineStyle" must be provided'
         );
-        const n = k({ url: e, inlineStyle: i, attributes: t });
-        n.onload = () => {
+        const o = k({ url: e, inlineStyle: i, attributes: t });
+        o.onload = () => {
           this.debug && console.log(`${e} stylesheet loaded successfully`), r();
-        }, n.onerror = () => {
+        }, o.onerror = () => {
           const d = new Error(`Stylesheet load error for ${e}`);
           l.handleError(
             "Boostify.loadStyle",
             "Error loading stylesheet",
             d,
             this.debug
-          ), o(d);
-        }, v(n, s), (i || !e) && r();
-      } catch (n) {
+          ), n(d);
+        }, v(o, s), (i || !e) && r();
+      } catch (o) {
         l.handleError(
           "Boostify.loadStyle",
           "Error creating style element",
-          n,
+          o,
           this.debug
-        ), o(n);
+        ), n(o);
       }
     });
   }
