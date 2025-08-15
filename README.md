@@ -16,6 +16,16 @@ For more information, visit [boostifyjs.com](https://boostifyjs.com/)
 
 ## Changelog
 
+### [0.0.16] - 2025-08-15
+**Changed**
+- Enhanced inactivity detection with dual-mode support (user idle/native idle)
+- Added `maxTime` parameter for better idle timeout control
+- **Breaking**: `destroyinactivity()` now requires event name parameter
+
+**Improved**
+- Event listeners now use passive mode for better performance
+- More robust timer cleanup with centralized management
+
 ### [0.0.15] - 2025-08-07
 **Changed**
 - Fix autoplay true/false in videoplayer
