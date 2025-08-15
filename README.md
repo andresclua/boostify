@@ -16,6 +16,10 @@ For more information, visit [boostifyjs.com](https://boostifyjs.com/)
 
 ## Changelog
 
+### [0.0.17] - 2025-08-15
+**Changed**
+- Library Validation
+
 ### [0.0.16] - 2025-08-15
 **Changed**
 - Enhanced inactivity detection with dual-mode support (user idle/native idle)

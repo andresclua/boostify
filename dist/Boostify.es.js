@@ -388,15 +388,18 @@ class L {
   /**
    * Initialize Boostify and validate license
    */
-  async init() {
-    try {
-      (await $(this.productID, this.license)).success ? this.debug && console.log(
-        `%c${m.brand} - ${m.license_approved}`,
-        p(E)
-      ) : (setTimeout(() => this.destroyNoMatterWhat(), 1200), this.wm());
-    } catch (e) {
-      l.handleError("Boostify.init", m.errorValidate, e, this.debug);
-    }
+  init() {
+    const e = async () => {
+      try {
+        (await $(this.productID, this.license)).success ? this.debug && console.log(
+          `%c${m.brand} - ${m.license_approved}`,
+          p(E)
+        ) : (setTimeout(() => this.destroyNoMatterWhat(), 1200), this.wm());
+      } catch (t) {
+        l.handleError("Boostify.init", m.errorValidate, t, this.debug);
+      }
+    };
+    "requestIdleCallback" in window ? requestIdleCallback(e, { timeout: 1e4 }) : setTimeout(e, 1e4);
   }
   /**
    * Register an event in the events array
