@@ -1,18 +1,14 @@
-const E = { background: "#065205", color: "#bada55", padding: "3px", marginTop: "10px" };
-function p(a) {
-  return Object.entries(a).map(([e, t]) => `${e}: ${t}`).join("; ");
-}
-function k({ url: a, inlineScript: e, attributes: t = [] }) {
+function y({ url: h, inlineScript: e, attributes: t = [] }) {
   const i = document.createElement("script");
-  return a && (i.src = a), e && (i.textContent = e), y(i, t), i;
+  return h && (i.src = h), e && (i.textContent = e), p(i, t), i;
 }
-function y(a, e) {
+function p(h, e) {
   e.forEach((t) => {
     const [i, s] = t.includes("=") ? t.split("=") : [t, !0];
-    a.setAttribute(i, s === !0 ? "" : s.replace(/"/g, ""));
+    h.setAttribute(i, s === !0 ? "" : s.replace(/"/g, ""));
   });
 }
-function v(a, e) {
+function g(h, e) {
   let t;
   if (e === "head" || e === "body")
     t = document[e];
@@ -21,26 +17,21 @@ function v(a, e) {
       throw console.error("No element matches the selector: " + e), new Error("No element matches the selector: " + e);
   } else
     e instanceof Element ? t = e : t = document.head;
-  t.appendChild(a);
+  t.appendChild(h);
 }
-function I({ url: a, inlineStyle: e, attributes: t = [] }) {
+function E({ url: h, inlineStyle: e, attributes: t = [] }) {
   let i;
-  if (a)
-    i = document.createElement("link"), i.rel = "stylesheet", i.href = a;
+  if (h)
+    i = document.createElement("link"), i.rel = "stylesheet", i.href = h;
   else if (e)
     i = document.createElement("style"), i.textContent = e;
   else
     throw new Error('Either "url" or "inlineStyle" must be provided.');
-  return y(i, t), i;
+  return p(i, t), i;
 }
-const m = {
-  brand: "BoostifyJs",
-  license_approved: "Boostify License Approved",
-  license_declined: "Boostify License Declined",
-  productId: "aMIIxUtC_O7lbjSFXH5eWQ==",
-  APIvalidate: "https://api.gumroad.com/v2/licenses/verify",
-  errorValidate: "Error: while validing the license"
-}, u = {
+const k = {
+  brand: "BoostifyJs"
+}, f = {
   debugDefault: "Execution - On Page Load - Will load delay scripts with attribute",
   scriptLoaded: "Script loaded",
   scriptNotLoaded: "Script not loaded",
@@ -67,7 +58,7 @@ const m = {
 }, b = {
   debugDefault: "Boostify - Execution - On Scroll at",
   debugDefaultSecond: "from the top of the page"
-}, g = {
+}, v = {
   noElement: "ObserverEvent: Provided 'element' is neither a valid DOM element nor a NodeList.",
   noCallback: "ObserverEvent: Provided 'callback' is not a function.",
   noObserver: "ObserverEvent: No observer was found for the provided element."
@@ -105,7 +96,7 @@ class l {
     e || this.throwError(t, i);
   }
 }
-class f {
+class m {
   constructor(e) {
     this.debug = e.debug || !1, this.callbackFn = e.callback || null, this.type = this.constructor.name, this.init();
   }
@@ -113,7 +104,7 @@ class f {
    * Initialization method that child classes can override
    */
   init() {
-    this.debug && this.logDebug(`${this.type} initialized`);
+    this.debug && this.logDebug("initialized");
   }
   /**
    * Execute callback with context
@@ -128,7 +119,10 @@ class f {
    * @param {String} message - Message to log
    */
   logDebug(e) {
-    this.debug && console.log(`%c${e}`, this.getDebugStyle());
+    if (this.debug) {
+      const { emoji: t, style: i } = this.getDebugConfig();
+      console.log(`%c${t} ${this.type}: ${e}`, i);
+    }
   }
   /**
    * Log error message
@@ -136,41 +130,48 @@ class f {
    * @param {Error} error - Error object
    */
   logError(e, t) {
-    console.error(`${e}`, t);
+    console.error(`❌ ${this.type}: ${e}`, t);
   }
   /**
-   * Get debug style for console logging
+   * Get debug configuration for console logging
    * Child classes should override this to provide their own styling
-   * @returns {String} - CSS style string
+   * @returns {Object} - { emoji, style }
    */
-  getDebugStyle() {
-    return "background: #333; color: #fff; padding: 3px;";
+  getDebugConfig() {
+    return {
+      emoji: "🔧",
+      style: "background: #333; color: #fff; padding: 3px 6px; border-radius: 3px;"
+    };
   }
   /**
    * Base destroy method that child classes must implement
    * Used for cleanup (removing event listeners, etc.)
    */
   destroy() {
-    this.logDebug(`${this.type} destroyed`);
+    this.logDebug("destroyed");
   }
 }
-class w extends f {
+class w extends m {
   constructor(e) {
-    super(e), this.selector = e.selector || "script[type='text/boostify']", this.wereScriptsExecuted = !1, this.maxTime = e.maxTime || 600, this.eventsHandler = e.eventsHandler || ["mousemove", "load", "scroll", "touchstart"], this._handleScroll = this._handleScroll.bind(this), this._mouseMove = this._mouseMove.bind(this), this._touchStart = this._touchStart.bind(this), this.setupTimeout(), this.setupEvents();
+    super(e), this.selector = e.selector || "script[type='text/boostify']", this.wereScriptsExecuted = !1, this.maxTime = e.maxTime || 600, this.eventsHandler = e.eventsHandler || ["mousemove", "load", "scroll", "touchstart"], this.worker = e.worker || !1, this.workerInstance = null, this._handleScroll = this._handleScroll.bind(this), this._mouseMove = this._mouseMove.bind(this), this._touchStart = this._touchStart.bind(this), this.setupTimeout(), this.setupEvents(), this.logDebug(`${f.debugDefault} "${this.selector}" on [${this.eventsHandler.join(", ")}] after ${this.maxTime}ms${this.worker ? " (worker mode)" : ""}`);
   }
-  init() {
-    this.logDebug(`${u.debugDefault} ${this.selector} on ${this.eventsHandler} after ${this.maxTime}s`);
-  }
-  getDebugStyle() {
-    return "background: #b8eba9; color: #444; padding: 3px;";
+  getDebugConfig() {
+    return {
+      emoji: "⚡",
+      style: "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;"
+    };
   }
   setupTimeout() {
     this.timeoutId = setTimeout(() => {
-      this.wereScriptsExecuted || (this.wereScriptsExecuted = !0, this.fire().then(() => {
-        this.executeCallback({ event: "onload" }), this.logDebug(u.events.load.positive);
-      }).catch((e) => {
-        this.logError(u.events.load.negative, e);
-      }));
+      if (!this.wereScriptsExecuted) {
+        this.wereScriptsExecuted = !0;
+        const e = performance.now();
+        this.fire().then((t) => {
+          t.loadTime = Math.round(performance.now() - e), this.executeCallback(t), this.logDebug(f.events.load.positive);
+        }).catch((t) => {
+          this.executeCallback({ success: !1, error: t.message }), this.logError(f.events.load.negative, t);
+        });
+      }
     }, this.maxTime);
   }
   setupEvents() {
@@ -179,22 +180,29 @@ class w extends f {
     });
   }
   _handleScroll() {
-    this.triggerLoad("scroll", u.events.scroll);
+    this.triggerLoad("scroll", f.events.scroll);
   }
   _mouseMove() {
-    this.triggerLoad("mousemove", u.events.mousemove);
+    this.triggerLoad("mousemove", f.events.mousemove);
   }
   _touchStart() {
-    this.triggerLoad("touchstart", u.events.touchstart);
+    this.triggerLoad("touchstart", f.events.touchstart);
   }
   triggerLoad(e, t) {
-    this.wereScriptsExecuted || (this.wereScriptsExecuted = !0, this.fire().then(() => {
-      this.executeCallback({ event: e }), this.logDebug(t.positive);
-    }).catch((i) => {
-      this.logError(t.negative, i);
-    }));
+    if (!this.wereScriptsExecuted) {
+      this.wereScriptsExecuted = !0;
+      const i = performance.now();
+      this.fire().then((s) => {
+        s.loadTime = Math.round(performance.now() - i), s.triggeredBy = e, this.executeCallback(s), this.logDebug(t.positive);
+      }).catch((s) => {
+        this.executeCallback({ success: !1, error: s.message, triggeredBy: e }), this.logError(t.negative, s);
+      });
+    }
   }
   fire() {
+    return this.worker && typeof Worker < "u" ? this.fireWithWorker() : this.fireTraditional();
+  }
+  fireTraditional() {
     return new Promise((e, t) => {
       const i = document.querySelectorAll(this.selector);
       if (i.length === 0) {
@@ -202,35 +210,90 @@ class w extends f {
         return;
       }
       const s = Array.from(i);
-      let r = 0;
-      const n = (c) => {
-        if (c.src) {
-          const h = document.createElement("script");
-          h.src = c.src, h.onload = () => {
-            r++, this.logDebug(`${u.scriptLoaded} ${c.src}`), r === s.length && e();
-          }, h.onerror = () => {
-            t(new Error(`${u.scriptNotLoaded}${c.src}`));
-          }, document.body.appendChild(h);
+      let n = 0;
+      const o = [], r = (d) => {
+        if (d.src) {
+          const u = document.createElement("script");
+          u.src = d.src, u.onload = () => {
+            n++, o.push({ url: d.src, success: !0, type: "external" }), this.logDebug(`${f.scriptLoaded} ${d.src}`), n === s.length && e({ success: !0, method: "traditional", scripts: o });
+          }, u.onerror = () => {
+            o.push({ url: d.src, success: !1, type: "external" }), t(new Error(`${f.scriptNotLoaded}${d.src}`));
+          }, document.body.appendChild(u);
         } else
           try {
-            const h = document.createElement("script");
-            h.text = c.innerText, document.body.appendChild(h), r++, r === s.length && e();
-          } catch (h) {
-            t(h);
+            const u = document.createElement("script");
+            u.text = d.innerText, document.body.appendChild(u), n++, o.push({ success: !0, type: "inline" }), n === s.length && e({ success: !0, method: "traditional", scripts: o });
+          } catch (u) {
+            o.push({ success: !1, type: "inline", error: u.message }), t(u);
           }
-      }, o = s.filter((c) => c.src), d = s.filter((c) => !c.src);
-      o.forEach(n), o.length === 0 ? d.forEach(n) : this.externalScriptsCheckIntervalId = setInterval(() => {
-        r >= o.length && (clearInterval(this.externalScriptsCheckIntervalId), d.forEach(n));
+      }, a = s.filter((d) => d.src), c = s.filter((d) => !d.src);
+      a.forEach(r), a.length === 0 ? c.forEach(r) : this.externalScriptsCheckIntervalId = setInterval(() => {
+        n >= a.length && (clearInterval(this.externalScriptsCheckIntervalId), c.forEach(r));
       }, 100);
     });
   }
+  fireWithWorker() {
+    return new Promise((e, t) => {
+      const i = document.querySelectorAll(this.selector);
+      if (i.length === 0) {
+        l.throwError("OnLoad.fire", `No scripts with ${this.selector} found.`);
+        return;
+      }
+      this.logDebug("Loading scripts via Web Worker + Proxy");
+      const s = [...i].filter((r) => r.src), n = [...i].filter((r) => !r.src), o = s.map((r) => r.src);
+      if (o.length === 0) {
+        const r = this.executeInlineScripts(n);
+        e({ success: !0, method: "worker", scripts: r });
+        return;
+      }
+      try {
+        this.workerInstance = new Worker(
+          new URL("/assets/ScriptLoader-a90db4eb.js", self.location)
+        );
+      } catch {
+        return this.logError("Worker creation failed, falling back to traditional loading"), this.fireTraditional().then(e).catch(t);
+      }
+      this.workerInstance.onmessage = ({ data: r }) => {
+        if (r.success) {
+          const a = [];
+          r.results.forEach((d) => {
+            if (d.success) {
+              const u = document.createElement("script");
+              u.text = d.content, document.body.appendChild(u), a.push({ url: d.url, success: !0, type: "external", proxied: d.proxied }), this.logDebug(`${f.scriptLoaded} (via Worker) ${d.url}`);
+            } else
+              a.push({ url: d.url, success: !1, type: "external", error: d.error }), this.logError(`Failed to load: ${d.url} - ${d.error}`);
+          });
+          const c = this.executeInlineScripts(n);
+          a.push(...c), e({ success: !0, method: "worker", scripts: a });
+        } else
+          t(new Error(r.error));
+        this.workerInstance.terminate(), this.workerInstance = null;
+      }, this.workerInstance.onerror = (r) => {
+        this.logError("Worker error, falling back to traditional loading"), this.workerInstance.terminate(), this.workerInstance = null, this.fireTraditional().then(e).catch(t);
+      }, this.workerInstance.postMessage({
+        urls: o,
+        id: Date.now()
+      });
+    });
+  }
+  executeInlineScripts(e) {
+    const t = [];
+    return e.forEach((i) => {
+      try {
+        const s = document.createElement("script");
+        s.text = i.innerText, document.body.appendChild(s), t.push({ success: !0, type: "inline" });
+      } catch (s) {
+        t.push({ success: !1, type: "inline", error: s.message });
+      }
+    }), t;
+  }
   destroy() {
-    this.timeoutId && clearTimeout(this.timeoutId), this.externalScriptsCheckIntervalId && clearInterval(this.externalScriptsCheckIntervalId), this.eventsHandler.forEach((e) => {
+    this.timeoutId && clearTimeout(this.timeoutId), this.externalScriptsCheckIntervalId && clearInterval(this.externalScriptsCheckIntervalId), this.workerInstance && (this.workerInstance.terminate(), this.workerInstance = null), this.eventsHandler.forEach((e) => {
       e === "scroll" ? window.removeEventListener("scroll", this._handleScroll) : e === "mousemove" ? window.removeEventListener("mousemove", this._mouseMove) : e === "touchstart" && window.removeEventListener("touchstart", this._touchStart);
     }), super.destroy();
   }
 }
-class C extends f {
+class I extends m {
   constructor(e) {
     super(e), l.assertCondition(
       e.element instanceof Element,
@@ -241,8 +304,11 @@ class C extends f {
   init() {
     this.logDebug(x.debugDefault);
   }
-  getDebugStyle() {
-    return "background: #7cc28d; color: #444; padding: 3px;";
+  getDebugConfig() {
+    return {
+      emoji: "👆",
+      style: "background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;"
+    };
   }
   clickHandler(e) {
     e.preventDefault(), this.executeCallback({
@@ -254,15 +320,18 @@ class C extends f {
     this.element.removeEventListener("click", this.clickHandler), super.destroy();
   }
 }
-class T extends f {
+class C extends m {
   constructor(e) {
     super(e), this.distance = e.distance, this.name = e.name || `scroll-${this.distance}`, this.wasScrollExecuted = !1, this.scrollHandler = this.scrollHandler.bind(this), window.addEventListener("scroll", this.scrollHandler);
   }
   init() {
     this.logDebug(`${b.debugDefault} ${this.distance} ${b.debugDefaultSecond}`);
   }
-  getDebugStyle() {
-    return "background: #065205; color: #bada55; padding: 3px; marginTop: 10px;";
+  getDebugConfig() {
+    return {
+      emoji: "📜",
+      style: "background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;"
+    };
   }
   scrollHandler() {
     !this.wasScrollExecuted && window.scrollY >= this.distance && (this.wasScrollExecuted = !0, this.executeCallback({
@@ -275,7 +344,7 @@ class T extends f {
     window.removeEventListener("scroll", this.scrollHandler), super.destroy();
   }
 }
-class S extends f {
+class T extends m {
   constructor(e) {
     super(e), l.assertCondition(
       e.element instanceof Element || NodeList.prototype.isPrototypeOf(e.element),
@@ -290,16 +359,19 @@ class S extends f {
   init() {
     this.logDebug("Observer initialized");
   }
-  getDebugStyle() {
-    return "background: #444444; color: #bada55; padding: 3px; marginTop: 10px;";
+  getDebugConfig() {
+    return {
+      emoji: "👁️",
+      style: "background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;"
+    };
   }
   setupObservers() {
-    NodeList.prototype.isPrototypeOf(this.element) ? this.element.forEach((e) => this.observeElement(e)) : this.element instanceof Element ? this.observeElement(this.element) : this.logError(g.noElement);
+    NodeList.prototype.isPrototypeOf(this.element) ? this.element.forEach((e) => this.observeElement(e)) : this.element instanceof Element ? this.observeElement(this.element) : this.logError(v.noElement);
   }
   observeElement(e) {
     const t = new IntersectionObserver((i, s) => {
-      i.forEach((r) => {
-        r.isIntersecting && this.executeCallback(r, s);
+      i.forEach((n) => {
+        n.isIntersecting && this.executeCallback(n, s);
       });
     }, this.options);
     t.observe(e), this.observers.push({ element: e, observer: t }), this.logDebug(`Observing element: ${e.tagName}${e.id ? "#" + e.id : ""}`);
@@ -307,7 +379,7 @@ class S extends f {
   destroy(e) {
     if (e && e.element) {
       const t = e.element, i = this.observers.findIndex((s) => s.element === t);
-      i !== -1 ? (this.observers[i].observer.disconnect(), this.observers.splice(i, 1), this.logDebug(`Observer for element ${t.tagName}${t.id ? "#" + t.id : ""} destroyed`)) : this.logError(g.noObserver);
+      i !== -1 ? (this.observers[i].observer.disconnect(), this.observers.splice(i, 1), this.logDebug(`Observer for element ${t.tagName}${t.id ? "#" + t.id : ""} destroyed`)) : this.logError(v.noObserver);
     } else
       this.observers.forEach((t) => {
         t.observer.disconnect(), this.logDebug(`Observer for element ${t.element.tagName}${t.element.id ? "#" + t.element.id : ""} destroyed`);
@@ -315,16 +387,16 @@ class S extends f {
     super.destroy();
   }
 }
-class D {
-  constructor({ idleTime: e, maxTime: t = 2e3, events: i = ["mousemove", "scroll", "keydown", "mousedown", "mouseup", "click", "touchstart", "touchend"], callback: s, debug: r = !1 }) {
-    this.idleTime = e, this.maxTime = t, this.events = i, this.callback = s, this.debug = r, this.lastActivityTime = Date.now(), this.checkingInactivity = !1, this.idleCallbackId = null, this.userIdleTimeoutId = null, this.boundResetIdleTimer = this.resetIdleTimer.bind(this), this.idleTime !== void 0 && this.idleTime >= this.maxTime && (this.debug && console.warn("InactivityEvnt: idleTime debe ser menor que maxTime. Ajustando idleTime a", this.maxTime - 100), this.idleTime = this.maxTime - 100), this.init();
+class S {
+  constructor({ idleTime: e, maxTime: t = 2e3, events: i = ["mousemove", "scroll", "keydown", "mousedown", "mouseup", "click", "touchstart", "touchend"], callback: s, debug: n = !1 }) {
+    this.idleTime = e, this.maxTime = t, this.events = i, this.callback = s, this.debug = n, this.lastActivityTime = Date.now(), this.checkingInactivity = !1, this.idleCallbackId = null, this.userIdleTimeoutId = null, this.boundResetIdleTimer = this.resetIdleTimer.bind(this), this.idleTime !== void 0 && this.idleTime >= this.maxTime && (this.debug && console.warn("%c⚠️ InactivityEvnt: idleTime debe ser menor que maxTime. Ajustando idleTime a " + (this.maxTime - 100), "background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px;"), this.idleTime = this.maxTime - 100), this.init();
   }
   init() {
     if (this.events !== "none" && this.idleTime !== void 0 && this.events.forEach((e) => {
       window.addEventListener(e, this.boundResetIdleTimer, { passive: !0 });
     }), this.startChecking(), this.debug) {
       const e = this.idleTime !== void 0 ? "user idle" : "native idle";
-      console.log(`Inactivity event initialized in ${e} mode, maxTime: ${this.maxTime}`);
+      console.log(`%c💤 InactivityEvnt: initialized in ${e} mode, maxTime: ${this.maxTime}`, "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;");
     }
   }
   resetIdleTimer() {
@@ -336,19 +408,19 @@ class D {
   // Native idle mode: use requestIdleCallback with maxTime as timeout
   scheduleNativeIdleCheck() {
     this.checkingInactivity && ("requestIdleCallback" in window ? this.idleCallbackId = requestIdleCallback(() => {
-      this.checkingInactivity && (this.debug && console.log("Browser idle detected"), this.executeCallback());
+      this.checkingInactivity && (this.debug && console.log("%c💤 InactivityEvnt: Browser idle detected", "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), this.executeCallback());
     }, { timeout: this.maxTime }) : this.idleCallbackId = setTimeout(() => {
-      this.checkingInactivity && (this.debug && console.log("Timeout reached (no requestIdleCallback)"), this.executeCallback());
+      this.checkingInactivity && (this.debug && console.log("%c💤 InactivityEvnt: Timeout reached (no requestIdleCallback)", "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), this.executeCallback());
     }, this.maxTime));
   }
   // User idle mode: check user activity with maxTime as safety net
   scheduleUserIdleCheck() {
     this.checkingInactivity && (this.userIdleTimeoutId = setTimeout(() => {
-      this.checkingInactivity && (this.debug && console.log("User idle detected after", this.idleTime, "ms"), this.executeCallback());
+      this.checkingInactivity && (this.debug && console.log(`%c💤 InactivityEvnt: User idle detected after ${this.idleTime}ms`, "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), this.executeCallback());
     }, this.idleTime), "requestIdleCallback" in window ? this.idleCallbackId = requestIdleCallback(() => {
-      this.checkingInactivity && Date.now() - this.lastActivityTime >= this.idleTime && (this.debug && console.log("User idle confirmed by requestIdleCallback"), this.executeCallback());
+      this.checkingInactivity && Date.now() - this.lastActivityTime >= this.idleTime && (this.debug && console.log("%c💤 InactivityEvnt: User idle confirmed by requestIdleCallback", "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), this.executeCallback());
     }, { timeout: this.maxTime }) : this.idleCallbackId = setTimeout(() => {
-      this.checkingInactivity && (this.debug && console.log("Max timeout reached"), this.executeCallback());
+      this.checkingInactivity && (this.debug && console.log("%c💤 InactivityEvnt: Max timeout reached", "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), this.executeCallback());
     }, this.maxTime));
   }
   executeCallback() {
@@ -360,46 +432,18 @@ class D {
   destroy() {
     this.checkingInactivity = !1, this.clearAllTimers(), this.events !== "none" && this.idleTime !== void 0 && this.events.forEach((e) => {
       window.removeEventListener(e, this.boundResetIdleTimer);
-    }), this.debug && console.log("Inactivity event destroyed");
+    }), this.debug && console.log("%c💤 InactivityEvnt: destroyed", "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;");
   }
 }
-function $(a, e) {
-  const t = "https://api.gumroad.com/v2/licenses/verify";
-  return new Promise((i, s) => {
-    const r = new FormData();
-    r.append("product_id", a), r.append("license_key", e), fetch(t, {
-      method: "POST",
-      body: r
-    }).then((n) => n.json()).then((n) => {
-      i(n);
-    }).catch((n) => {
-      s(n);
-    });
-  });
-}
-class L {
-  constructor(e) {
-    l.assertCondition(
-      e && e.license,
-      "Boostify",
-      "License is required"
-    ), this.productID = "aMIIxUtC_O7lbjSFXH5eWQ==", this.license = e.license, this.debug = e.debug || !1, this.events = [], this.init();
+class $ {
+  constructor(e = {}) {
+    this.debug = e.debug || !1, this.events = [], this.init();
   }
   /**
-   * Initialize Boostify and validate license
+   * Initialize Boostify
    */
   init() {
-    const e = async () => {
-      try {
-        (await $(this.productID, this.license)).success ? this.debug && console.log(
-          `%c${m.brand} - ${m.license_approved}`,
-          p(E)
-        ) : (setTimeout(() => this.destroyNoMatterWhat(), 1200), this.wm());
-      } catch (t) {
-        l.handleError("Boostify.init", m.errorValidate, t, this.debug);
-      }
-    };
-    "requestIdleCallback" in window ? requestIdleCallback(e, { timeout: 1e4 }) : setTimeout(e, 1e4);
+    this.debug && console.log(`%c🚀 ${k.brand} - Initialized`, "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px;");
   }
   /**
    * Register an event in the events array
@@ -419,6 +463,7 @@ class L {
   /**
    * Create a load event
    * @param {Object} payload - Configuration options
+   * @param {boolean} [payload.worker=false] - Use Web Worker + Proxy for loading scripts
    * @returns {OnLoad} - The created OnLoad instance
    */
   onload(e = {}) {
@@ -427,7 +472,8 @@ class L {
       maxTime: e.maxTime || 600,
       selector: e.selector || "script[type='text/boostify']",
       eventsHandler: e.eventsHandler || ["mousemove", "load", "scroll", "touchstart"],
-      callback: e.callback || null
+      callback: e.callback || null,
+      worker: e.worker || !1
     });
     return this.registerEvent("onload", t), t;
   }
@@ -443,7 +489,7 @@ class L {
       "Boostify.click",
       "Element is required and must be a valid DOM element"
     );
-    const i = new C({
+    const i = new I({
       debug: this.debug,
       element: t,
       callback: e.callback || null
@@ -472,7 +518,7 @@ class L {
       "Boostify.scroll",
       "Distance is required and must be a number"
     );
-    const t = e.name || `scroll-${e.distance}`, i = new T({
+    const t = e.name || `scroll-${e.distance}`, i = new C({
       debug: this.debug,
       distance: e.distance,
       callback: e.callback || null,
@@ -507,13 +553,13 @@ class L {
       root: null,
       rootMargin: "0px",
       threshold: 0.01
-    }, ...e.options }, r = new S({
+    }, ...e.options }, n = new T({
       debug: this.debug,
       element: t,
       options: s,
       callback: e.callback || null
-    }), n = t instanceof NodeList ? [...t] : [t];
-    return this.registerEvent("observer", r, { elements: n }), r;
+    }), o = t instanceof NodeList ? [...t] : [t];
+    return this.registerEvent("observer", n, { elements: o }), n;
   }
   /**
    * Refresh observer events
@@ -526,8 +572,8 @@ class L {
       i.instance.observers.forEach((s) => {
         if (!e || s.element === e) {
           s.observer.disconnect();
-          const r = i.instance.observers.indexOf(s);
-          r > -1 && i.instance.observers.splice(r, 1), e && document.contains(e) && i.instance.observeElement(e);
+          const n = i.instance.observers.indexOf(s);
+          n > -1 && i.instance.observers.splice(n, 1), e && document.contains(e) && i.instance.observeElement(e);
         }
       }), e || (i.instance.observers = [], Array.isArray(i.elements) && i.elements.forEach((s) => {
         document.contains(s) && i.instance.observeElement(s);
@@ -544,10 +590,10 @@ class L {
     const t = e.element instanceof NodeList ? [...e.element] : [e.element];
     let i = !1;
     return t.forEach((s) => {
-      const r = this.events.findIndex(
-        (n) => n.type === "observer" && Array.isArray(n.elements) && n.elements.includes(s)
+      const n = this.events.findIndex(
+        (o) => o.type === "observer" && Array.isArray(o.elements) && o.elements.includes(s)
       );
-      r !== -1 ? (this.events[r].instance.destroy({ element: s }), this.events[r].instance.observers.length === 0 && this.events.splice(r, 1), i = !0) : this.debug && console.warn("Observer event not found for element:", s);
+      n !== -1 ? (this.events[n].instance.destroy({ element: s }), this.events[n].instance.observers.length === 0 && this.events.splice(n, 1), i = !0) : this.debug && console.warn("Observer event not found for element:", s);
     }), i;
   }
   /**
@@ -561,7 +607,7 @@ class L {
       "Boostify.inactivity",
       "Callback is required and must be a function"
     );
-    const t = e.name || `inactivity-${Date.now()}`, i = new D({
+    const t = e.name || `inactivity-${Date.now()}`, i = new S({
       debug: this.debug,
       idleTime: e.idleTime,
       // CHANGE: Pass idleTime (default 1500 in class)
@@ -652,26 +698,26 @@ class L {
    */
   videoPlayer(e) {
     try {
-      const { url: { ogg: t, mp4: i }, attributes: s, appendTo: r, style: n } = e, o = document.createElement("video");
-      o.style.width = "100%", o.style.height = n && n.height ? n.height : "auto", n && Object.keys(n).forEach((c) => {
-        o.style[c] = n[c];
+      const { url: { ogg: t, mp4: i }, attributes: s, appendTo: n, style: o } = e, r = document.createElement("video");
+      r.style.width = "100%", r.style.height = o && o.height ? o.height : "auto", o && Object.keys(o).forEach((c) => {
+        r.style[c] = o[c];
       });
       for (let c in s)
-        c === "class" ? o.className = s[c] : c === "muted" ? o.muted = s[c] : c === "autoplay" ? o.autoplay = s[c] : c === "controls" ? o.controls = s[c] : o.setAttribute(c, s[c]);
+        c === "class" ? r.className = s[c] : c === "muted" ? r.muted = s[c] : c === "autoplay" ? r.autoplay = s[c] : c === "controls" ? r.controls = s[c] : r.setAttribute(c, s[c]);
       if (t) {
         const c = document.createElement("source");
-        c.setAttribute("src", t), c.setAttribute("type", "video/ogg"), o.appendChild(c);
+        c.setAttribute("src", t), c.setAttribute("type", "video/ogg"), r.appendChild(c);
       }
       if (i) {
         const c = document.createElement("source");
-        c.setAttribute("src", i), c.setAttribute("type", "video/mp4"), o.appendChild(c);
+        c.setAttribute("src", i), c.setAttribute("type", "video/mp4"), r.appendChild(c);
       }
-      let d;
-      return typeof r == "string" ? d = document.getElementById(r) || document.querySelector(r) : r instanceof Element && (d = r), l.assertCondition(
-        d,
+      let a;
+      return typeof n == "string" ? a = document.getElementById(n) || document.querySelector(n) : n instanceof Element && (a = n), l.assertCondition(
+        a,
         "Boostify.videoPlayer",
         "Append target not found"
-      ), d.appendChild(o), o;
+      ), a.appendChild(r), r;
     } catch (t) {
       l.handleError(
         "Boostify.videoPlayer",
@@ -721,23 +767,23 @@ class L {
         "Boostify.videoEmbed",
         "appendTo is required"
       );
-      const r = document.createElement("iframe");
-      r.setAttribute("frameborder", "0"), r.setAttribute("allowfullscreen", ""), r.style.width = "100%", r.style.height = s && s.height ? s.height : "100%", s && Object.keys(s).forEach((d) => {
-        r.style[d] = s[d];
+      const n = document.createElement("iframe");
+      n.setAttribute("frameborder", "0"), n.setAttribute("allowfullscreen", ""), n.style.width = "100%", n.style.height = s && s.height ? s.height : "100%", s && Object.keys(s).forEach((a) => {
+        n.style[a] = s[a];
       });
-      let n = e;
-      t && (n += `${e.includes("?") ? "&" : "?"}autoplay=1`, e.includes("youtube.com") || e.includes("youtu.be") ? n += "&mute=1" : e.includes("vimeo.com") && (n += "&muted=1")), r.src = n;
-      let o;
-      return typeof i == "string" ? o = document.getElementById(i) || document.querySelector(i) : i instanceof Element && (o = i), l.assertCondition(
-        o,
+      let o = e;
+      t && (o += `${e.includes("?") ? "&" : "?"}autoplay=1`, e.includes("youtube.com") || e.includes("youtu.be") ? o += "&mute=1" : e.includes("vimeo.com") && (o += "&muted=1")), n.src = o;
+      let r;
+      return typeof i == "string" ? r = document.getElementById(i) || document.querySelector(i) : i instanceof Element && (r = i), l.assertCondition(
+        r,
         "Boostify.videoEmbed",
         "Append target not found"
-      ), o.innerHTML = "", o.appendChild(r), r;
-    } catch (r) {
+      ), r.innerHTML = "", r.appendChild(n), n;
+    } catch (n) {
       l.handleError(
         "Boostify.videoEmbed",
         "Error creating video embed",
-        r,
+        n,
         this.debug
       );
     }
@@ -748,32 +794,32 @@ class L {
    * @returns {Promise} - Promise that resolves when the script is loaded
    */
   async loadScript({ url: e = "", attributes: t = [], appendTo: i = "head", inlineScript: s = "" }) {
-    return new Promise((r, n) => {
+    return new Promise((n, o) => {
       try {
         l.assertCondition(
           e || s,
           "Boostify.loadScript",
           'Either "url" or "inlineScript" must be provided'
         );
-        const o = k({ url: e, inlineScript: s, attributes: t });
-        o.onload = () => {
-          this.debug && console.log(`${e} script loaded successfully`), r();
-        }, o.onerror = () => {
-          const d = new Error(`Script load error for ${e}`);
+        const r = y({ url: e, inlineScript: s, attributes: t });
+        r.onload = () => {
+          this.debug && console.log(`%c📦 Script: ${e} loaded`, "background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), n();
+        }, r.onerror = () => {
+          const a = new Error(`Script load error for ${e}`);
           l.handleError(
             "Boostify.loadScript",
             "Error loading script",
-            d,
+            a,
             this.debug
-          ), n(d);
-        }, v(o, i), s && !e && r();
-      } catch (o) {
+          ), o(a);
+        }, g(r, i), s && !e && n();
+      } catch (r) {
         l.handleError(
           "Boostify.loadScript",
           "Error creating script element",
-          o,
+          r,
           this.debug
-        ), n(o);
+        ), o(r);
       }
     });
   }
@@ -783,45 +829,45 @@ class L {
    * @returns {Promise} - Promise that resolves when the stylesheet is loaded
    */
   async loadStyle({ url: e = "", attributes: t = [], appendTo: i = "head", inlineStyle: s = "" }) {
-    return new Promise((r, n) => {
+    return new Promise((n, o) => {
       try {
         l.assertCondition(
           e || s,
           "Boostify.loadStyle",
           'Either "url" or "inlineStyle" must be provided'
         );
-        const o = I({ url: e, inlineStyle: s, attributes: t });
-        o.onload = () => {
-          this.debug && console.log(`${e} stylesheet loaded successfully`), r();
-        }, o.onerror = () => {
-          const d = new Error(`Stylesheet load error for ${e}`);
+        const r = E({ url: e, inlineStyle: s, attributes: t });
+        r.onload = () => {
+          this.debug && console.log(`%c🎨 Style: ${e} loaded`, "background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), n();
+        }, r.onerror = () => {
+          const a = new Error(`Stylesheet load error for ${e}`);
           l.handleError(
             "Boostify.loadStyle",
             "Error loading stylesheet",
-            d,
+            a,
             this.debug
-          ), n(d);
-        }, v(o, i), (s || !e) && r();
-      } catch (o) {
+          ), o(a);
+        }, g(r, i), (s || !e) && n();
+      } catch (r) {
         l.handleError(
           "Boostify.loadStyle",
           "Error creating style element",
-          o,
+          r,
           this.debug
-        ), n(o);
+        ), o(r);
       }
     });
   }
   /**
    * Destroy all events
    */
-  destroyNoMatterWhat() {
-    console.log("destroyNoMatterWhat"), [...this.events].forEach((e) => {
+  destroyAll() {
+    [...this.events].forEach((e) => {
       try {
-        e.instance && typeof e.instance.destroy == "function" && (e.type === "click" || e.type === "scroll" ? e.instance.destroy() : e.type === "observer" ? (console.log("destroy observer"), e.instance.destroy()) : e.type === "onload" ? e.instance.destroy() : e.type === "inactivity" && (console.log("destroy inactivity"), e.instance.destroy()));
+        e.instance && typeof e.instance.destroy == "function" && e.instance.destroy();
       } catch (t) {
         l.handleError(
-          "Boostify.destroyNoMatterWhat",
+          "Boostify.destroyAll",
           `Error destroying ${e.type} event`,
           t,
           this.debug
@@ -829,28 +875,7 @@ class L {
       }
     }), this.events = [];
   }
-  /**
-   * Display watermark for invalid license
-   * This method is intentionally left as is to ensure failures for invalid licenses
-   */
-  wm() {
-    var e = document.createElement("div");
-    e.className = m.brand;
-    var t = document.createElement("h2");
-    t.textContent = m.brand;
-    function i() {
-      Object.assign(e.style, {
-        position: "fixed",
-        right: "10px",
-        padding: "5px",
-        bottom: "10px",
-        background: "grey",
-        zIndex: "1000"
-      }), t.style.fontSize = "11px";
-    }
-    i(), e.appendChild(t), document.body.appendChild(e), setInterval(i, 1e3);
-  }
 }
 export {
-  L as default
+  $ as default
 };
