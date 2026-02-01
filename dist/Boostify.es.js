@@ -1,14 +1,14 @@
-function y({ url: h, inlineScript: e, attributes: t = [] }) {
-  const i = document.createElement("script");
-  return h && (i.src = h), e && (i.textContent = e), p(i, t), i;
+function E({ url: u, inlineScript: e, attributes: t = [] }) {
+  const s = document.createElement("script");
+  return u && (s.src = u), e && (s.textContent = e), y(s, t), s;
 }
-function p(h, e) {
+function y(u, e) {
   e.forEach((t) => {
-    const [i, s] = t.includes("=") ? t.split("=") : [t, !0];
-    h.setAttribute(i, s === !0 ? "" : s.replace(/"/g, ""));
+    const [s, i] = t.includes("=") ? t.split("=") : [t, !0];
+    u.setAttribute(s, i === !0 ? "" : i.replace(/"/g, ""));
   });
 }
-function g(h, e) {
+function b(u, e) {
   let t;
   if (e === "head" || e === "body")
     t = document[e];
@@ -17,19 +17,19 @@ function g(h, e) {
       throw console.error("No element matches the selector: " + e), new Error("No element matches the selector: " + e);
   } else
     e instanceof Element ? t = e : t = document.head;
-  t.appendChild(h);
+  t.appendChild(u);
 }
-function E({ url: h, inlineStyle: e, attributes: t = [] }) {
-  let i;
-  if (h)
-    i = document.createElement("link"), i.rel = "stylesheet", i.href = h;
+function k({ url: u, inlineStyle: e, attributes: t = [] }) {
+  let s;
+  if (u)
+    s = document.createElement("link"), s.rel = "stylesheet", s.href = u;
   else if (e)
-    i = document.createElement("style"), i.textContent = e;
+    s = document.createElement("style"), s.textContent = e;
   else
     throw new Error('Either "url" or "inlineStyle" must be provided.');
-  return p(i, t), i;
+  return y(s, t), s;
 }
-const k = {
+const x = {
   brand: "BoostifyJs"
 }, f = {
   debugDefault: "Execution - On Page Load - Will load delay scripts with attribute",
@@ -53,17 +53,17 @@ const k = {
       negative: "Error executing scripts on touchstart"
     }
   }
-}, x = {
+}, w = {
   debugDefault: "Boostify js - Execution on click event"
-}, b = {
+}, v = {
   debugDefault: "Boostify - Execution - On Scroll at",
   debugDefaultSecond: "from the top of the page"
-}, v = {
+}, p = {
   noElement: "ObserverEvent: Provided 'element' is neither a valid DOM element nor a NodeList.",
   noCallback: "ObserverEvent: Provided 'callback' is not a function.",
   noObserver: "ObserverEvent: No observer was found for the provided element."
 };
-class l {
+class a {
   /**
    * Handle an error with consistent logging
    * @param {String} context - The context where the error occurred
@@ -72,8 +72,8 @@ class l {
    * @param {Boolean} debug - Whether to show additional debug info
    * @returns {Error} - The error object
    */
-  static handleError(e, t, i, s = !1) {
-    return console.error(`[${e}] ${t}`, i), s && console.error(`[${e}] Stack trace:`, i.stack), i;
+  static handleError(e, t, s, i = !1) {
+    return console.error(`[${e}] ${t}`, s), i && (s != null && s.stack) && console.error(`[${e}] Stack trace:`, s.stack), s;
   }
   /**
    * Throw a new error with consistent formatting
@@ -82,8 +82,8 @@ class l {
    * @throws {Error}
    */
   static throwError(e, t) {
-    const i = new Error(`[${e}] ${t}`);
-    throw console.error(i), i;
+    const s = new Error(`[${e}] ${t}`);
+    throw console.error(s), s;
   }
   /**
    * Assert that a condition is true, throw an error if not
@@ -92,8 +92,8 @@ class l {
    * @param {String} message - Error message if assertion fails
    * @throws {Error} - If condition is false
    */
-  static assertCondition(e, t, i) {
-    e || this.throwError(t, i);
+  static assertCondition(e, t, s) {
+    e || this.throwError(t, s);
   }
 }
 class m {
@@ -120,8 +120,8 @@ class m {
    */
   logDebug(e) {
     if (this.debug) {
-      const { emoji: t, style: i } = this.getDebugConfig();
-      console.log(`%c${t} ${this.type}: ${e}`, i);
+      const { emoji: t, style: s } = this.getDebugConfig();
+      console.log(`%c${t} ${this.type}: ${e}`, s);
     }
   }
   /**
@@ -151,7 +151,7 @@ class m {
     this.logDebug("destroyed");
   }
 }
-class w extends m {
+class I extends m {
   constructor(e) {
     super(e), this.selector = e.selector || "script[type='text/boostify']", this.wereScriptsExecuted = !1, this.maxTime = e.maxTime || 600, this.eventsHandler = e.eventsHandler || ["mousemove", "load", "scroll", "touchstart"], this.worker = e.worker || !1, this.workerInstance = null, this._handleScroll = this._handleScroll.bind(this), this._mouseMove = this._mouseMove.bind(this), this._touchStart = this._touchStart.bind(this), this.setupTimeout(), this.setupEvents(), this.logDebug(`${f.debugDefault} "${this.selector}" on [${this.eventsHandler.join(", ")}] after ${this.maxTime}ms${this.worker ? " (worker mode)" : ""}`);
   }
@@ -191,11 +191,11 @@ class w extends m {
   triggerLoad(e, t) {
     if (!this.wereScriptsExecuted) {
       this.wereScriptsExecuted = !0;
-      const i = performance.now();
-      this.fire().then((s) => {
-        s.loadTime = Math.round(performance.now() - i), s.triggeredBy = e, this.executeCallback(s), this.logDebug(t.positive);
-      }).catch((s) => {
-        this.executeCallback({ success: !1, error: s.message, triggeredBy: e }), this.logError(t.negative, s);
+      const s = performance.now();
+      this.fire().then((i) => {
+        i.loadTime = Math.round(performance.now() - s), i.triggeredBy = e, this.executeCallback(i), this.logDebug(t.positive);
+      }).catch((i) => {
+        this.executeCallback({ success: !1, error: i.message, triggeredBy: e }), this.logError(t.negative, i);
       });
     }
   }
@@ -204,86 +204,110 @@ class w extends m {
   }
   fireTraditional() {
     return new Promise((e, t) => {
-      const i = document.querySelectorAll(this.selector);
-      if (i.length === 0) {
-        l.throwError("OnLoad.fire", `No scripts with ${this.selector} found.`);
+      const s = document.querySelectorAll(this.selector);
+      if (s.length === 0) {
+        a.throwError("OnLoad.fire", `No scripts with ${this.selector} found.`);
         return;
       }
-      const s = Array.from(i);
-      let n = 0;
-      const o = [], r = (d) => {
-        if (d.src) {
-          const u = document.createElement("script");
-          u.src = d.src, u.onload = () => {
-            n++, o.push({ url: d.src, success: !0, type: "external" }), this.logDebug(`${f.scriptLoaded} ${d.src}`), n === s.length && e({ success: !0, method: "traditional", scripts: o });
-          }, u.onerror = () => {
-            o.push({ url: d.src, success: !1, type: "external" }), t(new Error(`${f.scriptNotLoaded}${d.src}`));
-          }, document.body.appendChild(u);
+      const i = Array.from(s);
+      let r = 0;
+      const n = [], o = (h) => {
+        if (h.src) {
+          const d = document.createElement("script");
+          d.src = h.src, d.onload = () => {
+            r++, n.push({ url: h.src, success: !0, type: "external" }), this.logDebug(`${f.scriptLoaded} ${h.src}`), r === i.length && e({ success: !0, method: "traditional", scripts: n });
+          }, d.onerror = () => {
+            n.push({ url: h.src, success: !1, type: "external" }), t(new Error(`${f.scriptNotLoaded}${h.src}`));
+          }, document.body.appendChild(d);
         } else
           try {
-            const u = document.createElement("script");
-            u.text = d.innerText, document.body.appendChild(u), n++, o.push({ success: !0, type: "inline" }), n === s.length && e({ success: !0, method: "traditional", scripts: o });
-          } catch (u) {
-            o.push({ success: !1, type: "inline", error: u.message }), t(u);
+            const d = document.createElement("script");
+            d.text = h.innerText, document.body.appendChild(d), r++, n.push({ success: !0, type: "inline" }), r === i.length && e({ success: !0, method: "traditional", scripts: n });
+          } catch (d) {
+            n.push({ success: !1, type: "inline", error: d.message }), t(d);
           }
-      }, a = s.filter((d) => d.src), c = s.filter((d) => !d.src);
-      a.forEach(r), a.length === 0 ? c.forEach(r) : this.externalScriptsCheckIntervalId = setInterval(() => {
-        n >= a.length && (clearInterval(this.externalScriptsCheckIntervalId), c.forEach(r));
+      }, c = i.filter((h) => h.src), l = i.filter((h) => !h.src);
+      c.forEach(o), c.length === 0 ? l.forEach(o) : this.externalScriptsCheckIntervalId = setInterval(() => {
+        r >= c.length && (clearInterval(this.externalScriptsCheckIntervalId), l.forEach(o));
       }, 100);
     });
   }
   fireWithWorker() {
     return new Promise((e, t) => {
-      const i = document.querySelectorAll(this.selector);
-      if (i.length === 0) {
-        l.throwError("OnLoad.fire", `No scripts with ${this.selector} found.`);
+      const s = document.querySelectorAll(this.selector);
+      if (s.length === 0) {
+        a.throwError("OnLoad.fire", `No scripts with ${this.selector} found.`);
         return;
       }
       this.logDebug("Loading scripts via Web Worker + Proxy");
-      const s = [...i].filter((r) => r.src), n = [...i].filter((r) => !r.src), o = s.map((r) => r.src);
-      if (o.length === 0) {
-        const r = this.executeInlineScripts(n);
-        e({ success: !0, method: "worker", scripts: r });
+      const i = [...s].filter((c) => c.src), r = [...s].filter((c) => !c.src), n = i.map((c) => c.src);
+      if (n.length === 0) {
+        const c = this.executeInlineScripts(r);
+        e({ success: !0, method: "worker", scripts: c });
         return;
       }
+      const o = `
+                const PROXY_URL = 'https://boostifyjs.com/proxy?url=';
+                self.onmessage = async ({ data }) => {
+                    const { urls, id } = data;
+                    try {
+                        const results = await Promise.all(
+                            urls.map(async (url) => {
+                                try {
+                                    const needsProxy = !url.startsWith(self.location.origin);
+                                    const fetchUrl = needsProxy ? PROXY_URL + encodeURIComponent(url) : url;
+                                    const response = await fetch(fetchUrl);
+                                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                                    const content = await response.text();
+                                    return { url, content, success: true, proxied: needsProxy };
+                                } catch (error) {
+                                    return { url, error: error.message, success: false };
+                                }
+                            })
+                        );
+                        self.postMessage({ id, results, success: true });
+                    } catch (error) {
+                        self.postMessage({ id, error: error.message, success: false });
+                    }
+                };
+            `;
       try {
-        this.workerInstance = new Worker(
-          new URL("/assets/ScriptLoader-a90db4eb.js", self.location)
-        );
+        const c = new Blob([o], { type: "application/javascript" });
+        this.workerInstance = new Worker(URL.createObjectURL(c));
       } catch {
         return this.logError("Worker creation failed, falling back to traditional loading"), this.fireTraditional().then(e).catch(t);
       }
-      this.workerInstance.onmessage = ({ data: r }) => {
-        if (r.success) {
-          const a = [];
-          r.results.forEach((d) => {
+      this.workerInstance.onmessage = ({ data: c }) => {
+        if (c.success) {
+          const l = [];
+          c.results.forEach((d) => {
             if (d.success) {
-              const u = document.createElement("script");
-              u.text = d.content, document.body.appendChild(u), a.push({ url: d.url, success: !0, type: "external", proxied: d.proxied }), this.logDebug(`${f.scriptLoaded} (via Worker) ${d.url}`);
+              const g = document.createElement("script");
+              g.text = d.content, document.body.appendChild(g), l.push({ url: d.url, success: !0, type: "external", proxied: d.proxied }), this.logDebug(`${f.scriptLoaded} (via Worker) ${d.url}`);
             } else
-              a.push({ url: d.url, success: !1, type: "external", error: d.error }), this.logError(`Failed to load: ${d.url} - ${d.error}`);
+              l.push({ url: d.url, success: !1, type: "external", error: d.error }), this.logError(`Failed to load: ${d.url} - ${d.error}`);
           });
-          const c = this.executeInlineScripts(n);
-          a.push(...c), e({ success: !0, method: "worker", scripts: a });
+          const h = this.executeInlineScripts(r);
+          l.push(...h), e({ success: !0, method: "worker", scripts: l });
         } else
-          t(new Error(r.error));
+          t(new Error(c.error));
         this.workerInstance.terminate(), this.workerInstance = null;
-      }, this.workerInstance.onerror = (r) => {
+      }, this.workerInstance.onerror = (c) => {
         this.logError("Worker error, falling back to traditional loading"), this.workerInstance.terminate(), this.workerInstance = null, this.fireTraditional().then(e).catch(t);
       }, this.workerInstance.postMessage({
-        urls: o,
+        urls: n,
         id: Date.now()
       });
     });
   }
   executeInlineScripts(e) {
     const t = [];
-    return e.forEach((i) => {
+    return e.forEach((s) => {
       try {
-        const s = document.createElement("script");
-        s.text = i.innerText, document.body.appendChild(s), t.push({ success: !0, type: "inline" });
-      } catch (s) {
-        t.push({ success: !1, type: "inline", error: s.message });
+        const i = document.createElement("script");
+        i.text = s.innerText, document.body.appendChild(i), t.push({ success: !0, type: "inline" });
+      } catch (i) {
+        t.push({ success: !1, type: "inline", error: i.message });
       }
     }), t;
   }
@@ -293,16 +317,16 @@ class w extends m {
     }), super.destroy();
   }
 }
-class I extends m {
+class C extends m {
   constructor(e) {
-    super(e), l.assertCondition(
+    super(e), a.assertCondition(
       e.element instanceof Element,
       "ClickEvnt",
       "Element is required and must be a valid DOM element"
     ), this.element = e.element, this.clickHandler = this.clickHandler.bind(this), this.element.addEventListener("click", this.clickHandler);
   }
   init() {
-    this.logDebug(x.debugDefault);
+    this.logDebug(w.debugDefault);
   }
   getDebugConfig() {
     return {
@@ -320,12 +344,12 @@ class I extends m {
     this.element.removeEventListener("click", this.clickHandler), super.destroy();
   }
 }
-class C extends m {
+class T extends m {
   constructor(e) {
     super(e), this.distance = e.distance, this.name = e.name || `scroll-${this.distance}`, this.wasScrollExecuted = !1, this.scrollHandler = this.scrollHandler.bind(this), window.addEventListener("scroll", this.scrollHandler);
   }
   init() {
-    this.logDebug(`${b.debugDefault} ${this.distance} ${b.debugDefaultSecond}`);
+    this.logDebug(`${v.debugDefault} ${this.distance} ${v.debugDefaultSecond}`);
   }
   getDebugConfig() {
     return {
@@ -344,9 +368,9 @@ class C extends m {
     window.removeEventListener("scroll", this.scrollHandler), super.destroy();
   }
 }
-class T extends m {
+class S extends m {
   constructor(e) {
-    super(e), l.assertCondition(
+    super(e), a.assertCondition(
       e.element instanceof Element || NodeList.prototype.isPrototypeOf(e.element),
       "ObserverEvent",
       "Element is required and must be a valid DOM element or NodeList"
@@ -366,20 +390,20 @@ class T extends m {
     };
   }
   setupObservers() {
-    NodeList.prototype.isPrototypeOf(this.element) ? this.element.forEach((e) => this.observeElement(e)) : this.element instanceof Element ? this.observeElement(this.element) : this.logError(v.noElement);
+    NodeList.prototype.isPrototypeOf(this.element) ? this.element.forEach((e) => this.observeElement(e)) : this.element instanceof Element ? this.observeElement(this.element) : this.logError(p.noElement);
   }
   observeElement(e) {
-    const t = new IntersectionObserver((i, s) => {
-      i.forEach((n) => {
-        n.isIntersecting && this.executeCallback(n, s);
+    const t = new IntersectionObserver((s, i) => {
+      s.forEach((r) => {
+        r.isIntersecting && this.executeCallback(r, i);
       });
     }, this.options);
     t.observe(e), this.observers.push({ element: e, observer: t }), this.logDebug(`Observing element: ${e.tagName}${e.id ? "#" + e.id : ""}`);
   }
   destroy(e) {
     if (e && e.element) {
-      const t = e.element, i = this.observers.findIndex((s) => s.element === t);
-      i !== -1 ? (this.observers[i].observer.disconnect(), this.observers.splice(i, 1), this.logDebug(`Observer for element ${t.tagName}${t.id ? "#" + t.id : ""} destroyed`)) : this.logError(v.noObserver);
+      const t = e.element, s = this.observers.findIndex((i) => i.element === t);
+      s !== -1 ? (this.observers[s].observer.disconnect(), this.observers.splice(s, 1), this.logDebug(`Observer for element ${t.tagName}${t.id ? "#" + t.id : ""} destroyed`)) : this.logError(p.noObserver);
     } else
       this.observers.forEach((t) => {
         t.observer.disconnect(), this.logDebug(`Observer for element ${t.element.tagName}${t.element.id ? "#" + t.element.id : ""} destroyed`);
@@ -387,9 +411,9 @@ class T extends m {
     super.destroy();
   }
 }
-class S {
-  constructor({ idleTime: e, maxTime: t = 2e3, events: i = ["mousemove", "scroll", "keydown", "mousedown", "mouseup", "click", "touchstart", "touchend"], callback: s, debug: n = !1 }) {
-    this.idleTime = e, this.maxTime = t, this.events = i, this.callback = s, this.debug = n, this.lastActivityTime = Date.now(), this.checkingInactivity = !1, this.idleCallbackId = null, this.userIdleTimeoutId = null, this.boundResetIdleTimer = this.resetIdleTimer.bind(this), this.idleTime !== void 0 && this.idleTime >= this.maxTime && (this.debug && console.warn("%c⚠️ InactivityEvnt: idleTime debe ser menor que maxTime. Ajustando idleTime a " + (this.maxTime - 100), "background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px;"), this.idleTime = this.maxTime - 100), this.init();
+class $ {
+  constructor({ idleTime: e, maxTime: t = 2e3, events: s = ["mousemove", "scroll", "keydown", "mousedown", "mouseup", "click", "touchstart", "touchend"], callback: i, debug: r = !1 }) {
+    this.idleTime = e, this.maxTime = t, this.events = s, this.callback = i, this.debug = r, this.lastActivityTime = Date.now(), this.checkingInactivity = !1, this.idleCallbackId = null, this.userIdleTimeoutId = null, this.boundResetIdleTimer = this.resetIdleTimer.bind(this), this.idleTime !== void 0 && this.idleTime >= this.maxTime && (this.debug && console.warn("%c⚠️ InactivityEvnt: idleTime debe ser menor que maxTime. Ajustando idleTime a " + (this.maxTime - 100), "background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px;"), this.idleTime = this.maxTime - 100), this.init();
   }
   init() {
     if (this.events !== "none" && this.idleTime !== void 0 && this.events.forEach((e) => {
@@ -435,7 +459,7 @@ class S {
     }), this.debug && console.log("%c💤 InactivityEvnt: destroyed", "background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;");
   }
 }
-class $ {
+class D {
   constructor(e = {}) {
     this.debug = e.debug || !1, this.events = [], this.init();
   }
@@ -443,7 +467,7 @@ class $ {
    * Initialize Boostify
    */
   init() {
-    this.debug && console.log(`%c🚀 ${k.brand} - Initialized`, "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px;");
+    this.debug && console.log(`%c🚀 ${x.brand} - Initialized`, "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px;");
   }
   /**
    * Register an event in the events array
@@ -452,13 +476,13 @@ class $ {
    * @param {Object} metadata - Additional metadata
    * @returns {Object} - The registered event object
    */
-  registerEvent(e, t, i = {}) {
-    const s = {
+  registerEvent(e, t, s = {}) {
+    const i = {
       type: e,
       instance: t,
-      ...i
+      ...s
     };
-    return this.events.push(s), s;
+    return this.events.push(i), i;
   }
   /**
    * Create a load event
@@ -467,7 +491,7 @@ class $ {
    * @returns {OnLoad} - The created OnLoad instance
    */
   onload(e = {}) {
-    const t = new w({
+    const t = new I({
       debug: this.debug,
       maxTime: e.maxTime || 600,
       selector: e.selector || "script[type='text/boostify']",
@@ -484,17 +508,17 @@ class $ {
    */
   click(e = {}) {
     const t = e.element || document.querySelector(".js--click-boostify");
-    l.assertCondition(
+    a.assertCondition(
       t instanceof Element,
       "Boostify.click",
       "Element is required and must be a valid DOM element"
     );
-    const i = new I({
+    const s = new C({
       debug: this.debug,
       element: t,
       callback: e.callback || null
     });
-    return this.registerEvent("click", i), i;
+    return this.registerEvent("click", s), s;
   }
   /**
    * Destroy a click event
@@ -504,7 +528,7 @@ class $ {
   destroyclick(e = {}) {
     const t = e.element || document.querySelector(".js--click-boostify");
     return this.destroyEventByCondition(
-      (i) => i.type === "click" && i.instance.element === t
+      (s) => s.type === "click" && s.instance.element === t
     );
   }
   /**
@@ -513,18 +537,18 @@ class $ {
    * @returns {ScrollEvnt} - The created ScrollEvnt instance
    */
   scroll(e = {}) {
-    l.assertCondition(
+    a.assertCondition(
       typeof e.distance == "number",
       "Boostify.scroll",
       "Distance is required and must be a number"
     );
-    const t = e.name || `scroll-${e.distance}`, i = new C({
+    const t = e.name || `scroll-${e.distance}`, s = new T({
       debug: this.debug,
       distance: e.distance,
       callback: e.callback || null,
       name: t
     });
-    return this.registerEvent("scroll", i, { name: t }), i;
+    return this.registerEvent("scroll", s, { name: t }), s;
   }
   /**
    * Destroy a scroll event
@@ -534,7 +558,7 @@ class $ {
   destroyscroll(e = {}) {
     const t = e.name || `scroll-${e.distance}`;
     return this.destroyEventByCondition(
-      (i) => i.type === "scroll" && i.name === t
+      (s) => s.type === "scroll" && s.name === t
     );
   }
   /**
@@ -544,22 +568,22 @@ class $ {
    */
   observer(e = {}) {
     const t = e.element || document.querySelector(".js--observer-boostify");
-    l.assertCondition(
+    a.assertCondition(
       t instanceof Element || NodeList.prototype.isPrototypeOf(t),
       "Boostify.observer",
       "Element is required and must be a valid DOM element or NodeList"
     );
-    const s = { ...{
+    const i = { ...{
       root: null,
       rootMargin: "0px",
       threshold: 0.01
-    }, ...e.options }, n = new T({
+    }, ...e.options }, r = new S({
       debug: this.debug,
       element: t,
-      options: s,
+      options: i,
       callback: e.callback || null
-    }), o = t instanceof NodeList ? [...t] : [t];
-    return this.registerEvent("observer", n, { elements: o }), n;
+    }), n = t instanceof NodeList ? [...t] : [t];
+    return this.registerEvent("observer", r, { elements: n }), r;
   }
   /**
    * Refresh observer events
@@ -567,16 +591,16 @@ class $ {
    */
   refreshobserver({ element: e } = {}) {
     this.events.filter(
-      (i) => i.type === "observer" && (!e || i.elements.includes(e))
-    ).forEach((i) => {
-      i.instance.observers.forEach((s) => {
-        if (!e || s.element === e) {
-          s.observer.disconnect();
-          const n = i.instance.observers.indexOf(s);
-          n > -1 && i.instance.observers.splice(n, 1), e && document.contains(e) && i.instance.observeElement(e);
+      (s) => s.type === "observer" && (!e || s.elements.includes(e))
+    ).forEach((s) => {
+      s.instance.observers.forEach((i) => {
+        if (!e || i.element === e) {
+          i.observer.disconnect();
+          const r = s.instance.observers.indexOf(i);
+          r > -1 && s.instance.observers.splice(r, 1), e && document.contains(e) && s.instance.observeElement(e);
         }
-      }), e || (i.instance.observers = [], Array.isArray(i.elements) && i.elements.forEach((s) => {
-        document.contains(s) && i.instance.observeElement(s);
+      }), e || (s.instance.observers = [], Array.isArray(s.elements) && s.elements.forEach((i) => {
+        document.contains(i) && s.instance.observeElement(i);
       }));
     });
   }
@@ -588,13 +612,13 @@ class $ {
     if (!e.element)
       return !1;
     const t = e.element instanceof NodeList ? [...e.element] : [e.element];
-    let i = !1;
-    return t.forEach((s) => {
-      const n = this.events.findIndex(
-        (o) => o.type === "observer" && Array.isArray(o.elements) && o.elements.includes(s)
+    let s = !1;
+    return t.forEach((i) => {
+      const r = this.events.findIndex(
+        (n) => n.type === "observer" && Array.isArray(n.elements) && n.elements.includes(i)
       );
-      n !== -1 ? (this.events[n].instance.destroy({ element: s }), this.events[n].instance.observers.length === 0 && this.events.splice(n, 1), i = !0) : this.debug && console.warn("Observer event not found for element:", s);
-    }), i;
+      r !== -1 ? (this.events[r].instance.destroy({ element: i }), this.events[r].instance.observers.length === 0 && this.events.splice(r, 1), s = !0) : this.debug && console.warn("Observer event not found for element:", i);
+    }), s;
   }
   /**
    * Create an inactivity event
@@ -602,12 +626,12 @@ class $ {
    * @returns {InactivityEvnt} - The created InactivityEvnt instance
    */
   inactivity(e = {}) {
-    l.assertCondition(
+    a.assertCondition(
       typeof e.callback == "function",
       "Boostify.inactivity",
       "Callback is required and must be a function"
     );
-    const t = e.name || `inactivity-${Date.now()}`, i = new S({
+    const t = e.name || `inactivity-${Date.now()}`, s = new $({
       debug: this.debug,
       idleTime: e.idleTime,
       // CHANGE: Pass idleTime (default 1500 in class)
@@ -616,7 +640,7 @@ class $ {
       events: e.events || ["mousemove", "scroll", "keydown", "mousedown", "mouseup", "click", "touchstart", "touchend"],
       callback: e.callback
     });
-    return this.registerEvent("inactivity", i, { name: t }), i;
+    return this.registerEvent("inactivity", s, { name: t }), s;
   }
   /**
    * Destroy an inactivity event
@@ -624,26 +648,26 @@ class $ {
    * @returns {Boolean} - Whether the event was destroyed
    */
   destroyinactivity(e = {}) {
-    l.assertCondition(
+    a.assertCondition(
       e.name,
       "Boostify.destroyinactivity",
       "Name is required to destroy an inactivity event"
     );
-    const t = e.name, i = this.events.findIndex(
-      (s) => s.type === "inactivity" && s.name === t
+    const t = e.name, s = this.events.findIndex(
+      (i) => i.type === "inactivity" && i.name === t
     );
-    l.assertCondition(
-      i !== -1,
+    a.assertCondition(
+      s !== -1,
       "Boostify.destroyinactivity",
       `Inactivity event with name "${t}" not found`
     );
     try {
-      return this.events[i].instance.destroy(), this.events.splice(i, 1), !0;
-    } catch (s) {
-      return l.handleError(
+      return this.events[s].instance.destroy(), this.events.splice(s, 1), !0;
+    } catch (i) {
+      return a.handleError(
         "Boostify.destroyinactivity",
         `Error destroying inactivity event "${t}"`,
-        s,
+        i,
         this.debug
       ), !1;
     }
@@ -658,11 +682,11 @@ class $ {
     if (t !== -1)
       try {
         return this.events[t].instance.destroy(), this.events.splice(t, 1), !0;
-      } catch (i) {
-        l.handleError(
+      } catch (s) {
+        a.handleError(
           "Boostify.destroyEventByCondition",
           "Error destroying event",
-          i,
+          s,
           this.debug
         );
       }
@@ -698,28 +722,28 @@ class $ {
    */
   videoPlayer(e) {
     try {
-      const { url: { ogg: t, mp4: i }, attributes: s, appendTo: n, style: o } = e, r = document.createElement("video");
-      r.style.width = "100%", r.style.height = o && o.height ? o.height : "auto", o && Object.keys(o).forEach((c) => {
-        r.style[c] = o[c];
+      const { url: { ogg: t, mp4: s }, attributes: i, appendTo: r, style: n } = e, o = document.createElement("video");
+      o.style.width = "100%", o.style.height = n && n.height ? n.height : "auto", n && Object.keys(n).forEach((l) => {
+        o.style[l] = n[l];
       });
-      for (let c in s)
-        c === "class" ? r.className = s[c] : c === "muted" ? r.muted = s[c] : c === "autoplay" ? r.autoplay = s[c] : c === "controls" ? r.controls = s[c] : r.setAttribute(c, s[c]);
+      for (let l in i)
+        l === "class" ? o.className = i[l] : l === "muted" ? o.muted = i[l] : l === "autoplay" ? o.autoplay = i[l] : l === "controls" ? o.controls = i[l] : o.setAttribute(l, i[l]);
       if (t) {
-        const c = document.createElement("source");
-        c.setAttribute("src", t), c.setAttribute("type", "video/ogg"), r.appendChild(c);
+        const l = document.createElement("source");
+        l.setAttribute("src", t), l.setAttribute("type", "video/ogg"), o.appendChild(l);
       }
-      if (i) {
-        const c = document.createElement("source");
-        c.setAttribute("src", i), c.setAttribute("type", "video/mp4"), r.appendChild(c);
+      if (s) {
+        const l = document.createElement("source");
+        l.setAttribute("src", s), l.setAttribute("type", "video/mp4"), o.appendChild(l);
       }
-      let a;
-      return typeof n == "string" ? a = document.getElementById(n) || document.querySelector(n) : n instanceof Element && (a = n), l.assertCondition(
-        a,
+      let c;
+      return typeof r == "string" ? c = document.getElementById(r) || document.querySelector(r) : r instanceof Element && (c = r), a.assertCondition(
+        c,
         "Boostify.videoPlayer",
         "Append target not found"
-      ), a.appendChild(r), r;
+      ), c.appendChild(o), o;
     } catch (t) {
-      l.handleError(
+      a.handleError(
         "Boostify.videoPlayer",
         "Error creating video player",
         t,
@@ -756,34 +780,34 @@ class $ {
    * @param {Object} [config.style] - CSS styles for the iframe
    * @returns {HTMLIFrameElement} - The created iframe element
    */
-  videoEmbed({ url: e, autoplay: t = !1, appendTo: i, style: s }) {
+  videoEmbed({ url: e, autoplay: t = !1, appendTo: s, style: i }) {
     try {
-      l.assertCondition(
+      a.assertCondition(
         e,
         "Boostify.videoEmbed",
         "URL is required"
-      ), l.assertCondition(
-        i,
+      ), a.assertCondition(
+        s,
         "Boostify.videoEmbed",
         "appendTo is required"
       );
-      const n = document.createElement("iframe");
-      n.setAttribute("frameborder", "0"), n.setAttribute("allowfullscreen", ""), n.style.width = "100%", n.style.height = s && s.height ? s.height : "100%", s && Object.keys(s).forEach((a) => {
-        n.style[a] = s[a];
+      const r = document.createElement("iframe");
+      r.setAttribute("frameborder", "0"), r.setAttribute("allowfullscreen", ""), r.style.width = "100%", r.style.height = i && i.height ? i.height : "100%", i && Object.keys(i).forEach((c) => {
+        r.style[c] = i[c];
       });
-      let o = e;
-      t && (o += `${e.includes("?") ? "&" : "?"}autoplay=1`, e.includes("youtube.com") || e.includes("youtu.be") ? o += "&mute=1" : e.includes("vimeo.com") && (o += "&muted=1")), n.src = o;
-      let r;
-      return typeof i == "string" ? r = document.getElementById(i) || document.querySelector(i) : i instanceof Element && (r = i), l.assertCondition(
-        r,
+      let n = e;
+      t && (n += `${e.includes("?") ? "&" : "?"}autoplay=1`, e.includes("youtube.com") || e.includes("youtu.be") ? n += "&mute=1" : e.includes("vimeo.com") && (n += "&muted=1")), r.src = n;
+      let o;
+      return typeof s == "string" ? o = document.getElementById(s) || document.querySelector(s) : s instanceof Element && (o = s), a.assertCondition(
+        o,
         "Boostify.videoEmbed",
         "Append target not found"
-      ), r.innerHTML = "", r.appendChild(n), n;
-    } catch (n) {
-      l.handleError(
+      ), o.innerHTML = "", o.appendChild(r), r;
+    } catch (r) {
+      a.handleError(
         "Boostify.videoEmbed",
         "Error creating video embed",
-        n,
+        r,
         this.debug
       );
     }
@@ -793,33 +817,33 @@ class $ {
    * @param {Object} config - Configuration options
    * @returns {Promise} - Promise that resolves when the script is loaded
    */
-  async loadScript({ url: e = "", attributes: t = [], appendTo: i = "head", inlineScript: s = "" }) {
-    return new Promise((n, o) => {
+  async loadScript({ url: e = "", attributes: t = [], appendTo: s = "head", inlineScript: i = "" }) {
+    return new Promise((r, n) => {
       try {
-        l.assertCondition(
-          e || s,
+        a.assertCondition(
+          e || i,
           "Boostify.loadScript",
           'Either "url" or "inlineScript" must be provided'
         );
-        const r = y({ url: e, inlineScript: s, attributes: t });
-        r.onload = () => {
-          this.debug && console.log(`%c📦 Script: ${e} loaded`, "background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), n();
-        }, r.onerror = () => {
-          const a = new Error(`Script load error for ${e}`);
-          l.handleError(
+        const o = E({ url: e, inlineScript: i, attributes: t });
+        o.onload = () => {
+          this.debug && console.log(`%c📦 Script: ${e} loaded`, "background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #000; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), r();
+        }, o.onerror = () => {
+          const c = new Error(`Script load error for ${e}`);
+          a.handleError(
             "Boostify.loadScript",
             "Error loading script",
-            a,
+            c,
             this.debug
-          ), o(a);
-        }, g(r, i), s && !e && n();
-      } catch (r) {
-        l.handleError(
+          ), n(c);
+        }, b(o, s), i && !e && r();
+      } catch (o) {
+        a.handleError(
           "Boostify.loadScript",
           "Error creating script element",
-          r,
+          o,
           this.debug
-        ), o(r);
+        ), n(o);
       }
     });
   }
@@ -828,33 +852,33 @@ class $ {
    * @param {Object} config - Configuration options
    * @returns {Promise} - Promise that resolves when the stylesheet is loaded
    */
-  async loadStyle({ url: e = "", attributes: t = [], appendTo: i = "head", inlineStyle: s = "" }) {
-    return new Promise((n, o) => {
+  async loadStyle({ url: e = "", attributes: t = [], appendTo: s = "head", inlineStyle: i = "" }) {
+    return new Promise((r, n) => {
       try {
-        l.assertCondition(
-          e || s,
+        a.assertCondition(
+          e || i,
           "Boostify.loadStyle",
           'Either "url" or "inlineStyle" must be provided'
         );
-        const r = E({ url: e, inlineStyle: s, attributes: t });
-        r.onload = () => {
-          this.debug && console.log(`%c🎨 Style: ${e} loaded`, "background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), n();
-        }, r.onerror = () => {
-          const a = new Error(`Stylesheet load error for ${e}`);
-          l.handleError(
+        const o = k({ url: e, inlineStyle: i, attributes: t });
+        o.onload = () => {
+          this.debug && console.log(`%c🎨 Style: ${e} loaded`, "background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; padding: 4px 8px; border-radius: 4px; font-weight: bold;"), r();
+        }, o.onerror = () => {
+          const c = new Error(`Stylesheet load error for ${e}`);
+          a.handleError(
             "Boostify.loadStyle",
             "Error loading stylesheet",
-            a,
+            c,
             this.debug
-          ), o(a);
-        }, g(r, i), (s || !e) && n();
-      } catch (r) {
-        l.handleError(
+          ), n(c);
+        }, b(o, s), (i || !e) && r();
+      } catch (o) {
+        a.handleError(
           "Boostify.loadStyle",
           "Error creating style element",
-          r,
+          o,
           this.debug
-        ), o(r);
+        ), n(o);
       }
     });
   }
@@ -866,7 +890,7 @@ class $ {
       try {
         e.instance && typeof e.instance.destroy == "function" && e.instance.destroy();
       } catch (t) {
-        l.handleError(
+        a.handleError(
           "Boostify.destroyAll",
           `Error destroying ${e.type} event`,
           t,
@@ -877,5 +901,5 @@ class $ {
   }
 }
 export {
-  $ as default
+  D as default
 };
